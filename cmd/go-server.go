@@ -71,7 +71,11 @@ func fileHandler(w http.ResponseWriter, r *http.Request) {
 	err, payload := readFile(resrouce)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		http.Error(w, "Failed to fetch resrouce", http.StatusInternalServerError)
+		errMsg := fmt.Sprintf("Failed to fetch resource %s", resrouce)
+		response := map[string]string{
+			"message": errMsg,
+		}
+		json.NewEncoder(w).Encode(response)
 		slog.Error(
 			"Failed to fetch resource",
 			"method", r.Method,
